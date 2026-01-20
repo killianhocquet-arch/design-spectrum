@@ -12,9 +12,10 @@ interface FeedCardProps {
   onNext: () => void;
   hasNext: boolean;
   onShowDetails?: () => void;
+  onShare?: () => void;
 }
 
-export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails }: FeedCardProps) {
+export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, onShare }: FeedCardProps) {
   const [isDoubleTap, setIsDoubleTap] = useState(false);
 
   const handleDoubleTap = () => {
@@ -26,6 +27,23 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails }
   const handleOpenSource = () => {
     if (content.sourceUrl) {
       window.open(content.sourceUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleShare = async () => {
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: content.title,
+          text: `Découvre ce design : ${content.title}`,
+          url: content.sourceUrl || window.location.href,
+        });
+        onShare?.();
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      onShare?.();
     }
   };
 
@@ -64,26 +82,6 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails }
         <button className="absolute top-4 right-4 p-2 bg-black/40 hover:bg-black/60 rounded-full backdrop-blur-sm transition-colors">
           <MoreVertical size={20} className="text-white" />
         </button>
-
-        {/* Indicateur Scroll/Détails - en haut au centre */}
-        {onShowDetails && (
-          <motion.button
-            onClick={onShowDetails}
-            className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/70 hover:text-white transition-colors"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <motion.div
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <ChevronUp size={24} />
-            </motion.div>
-            <span className="text-xs font-medium bg-black/40 px-2 py-1 rounded-full backdrop-blur-sm">
-              Détails
-            </span>
-          </motion.button>
-        )}
       </div>
 
       {/* Info Zone - 20% */}
@@ -133,6 +131,7 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails }
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            onClick={handleShare}
             className="p-2 rounded-full hover:bg-white/10 transition-colors"
           >
             <Share2 size={20} className="text-white/60" />
