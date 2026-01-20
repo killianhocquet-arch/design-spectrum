@@ -65,6 +65,7 @@ function convertYouTubeToContentItem(video: YouTubeVideo, index: number): Conten
     source: video.youtuber?.replace('@', '') || video.handle_name || 'YouTube',
     category: inferCategory(video.title),
     imageUrl: imageUrl,
+    sourceUrl: video.url, // URL vers la vidéo YouTube
     description: shortDesc.length > 0 ? shortDesc : 'Video from YouTube',
     realGauge: Math.min(100, Math.max(20, Math.floor(Math.log(viewCount) * 15))),
     conceptualGauge: Math.min(100, Math.max(50, Math.floor((likeCount / viewCount) * 100 * 5))),

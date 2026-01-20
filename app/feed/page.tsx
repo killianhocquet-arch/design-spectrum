@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, useMotionValue, useTransform, PanInfo } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, useMotionValue, useTransform, PanInfo, AnimatePresence } from 'framer-motion';
 import { ContentItem } from '@/lib/types';
 import { FeedCard } from '@/components/feed-card';
 import { useAppData, useFetchContent } from '@/lib/hooks';
+import { X, ExternalLink } from 'lucide-react';
 
 // Seuil de swipe en pixels
 const SWIPE_THRESHOLD = 100;
@@ -20,6 +21,7 @@ export default function FeedPage() {
   const [items, setItems] = useState<ContentItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   // Motion values pour le drag
   const x = useMotionValue(0);
@@ -100,6 +102,14 @@ export default function FeedPage() {
       x.set(0);
     }
   };
+
+  const handleShowDetails = useCallback(() => {
+    setShowDetails(true);
+  }, []);
+
+  const handleCloseDetails = useCallback(() => {
+    setShowDetails(false);
+  }, []);
 
   if (!isLoaded || (isLoading && items.length === 0)) {
     return (
@@ -209,6 +219,7 @@ export default function FeedPage() {
           onFavorite={handleFavorite}
           onNext={handleNext}
           hasNext={currentIndex < items.length - 1}
+          onShowDetails={handleShowDetails}
         />
 
         {/* Overlay indicateur swipe gauche (suivant) */}
@@ -253,6 +264,115 @@ export default function FeedPage() {
           Chargement de plus de contenus...
         </motion.div>
       )}
+
+      {/* Panneau de détails */}
+      <AnimatePresence>
+        {showDetails && (
+          <motion.div
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="absolute inset-0 bg-black/95 z-50 flex flex-col overflow-hidden"
+          >
+            {/* Header avec bouton fermer */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
+              <h2 className="text-lg font-semibold text-white">Détails</h2>
+              <button
+                onClick={handleCloseDetails}
+                className="p-2 rounded-full hover:bg-white/10 transition-colors"
+              >
+                <X size={24} className="text-white" />
+              </button>
+            </div>
+
+            {/* Contenu scrollable */}
+            <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+              {/* Image miniature */}
+              <div className="relative aspect-video rounded-xl overflow-hidden">
+                <img
+                  src={currentItem.imageUrl}
+                  alt={currentItem.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Titre et source */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs uppercase font-semibold text-orange-500">
+                    {currentItem.category}
+                  </span>
+                  <span className="text-xs text-white/50">•</span>
+                  <span className="text-xs text-white/50">{currentItem.source}</span>
+                </div>
+                <h1 className="text-2xl font-bold text-white leading-tight">
+                  {currentItem.title}
+                </h1>
+              </div>
+
+              {/* Description */}
+              {currentItem.description && (
+                <p className="text-white/70 text-sm leading-relaxed">
+                  {currentItem.description}
+                </p>
+              )}
+
+              {/* Gauges détaillées */}
+              <div className="space-y-4 py-4 border-t border-white/10">
+                <h3 className="text-sm font-semibold text-white/80 uppercase tracking-wide">
+                  Analyse du contenu
+                </h3>
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/60">Réel / Pratique</span>
+                      <span className="text-blue-400">{currentItem.realGauge}%</span>
+                    </div>
+                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${currentItem.realGauge}%` }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-white/60">Conceptuel / Théorique</span>
+                      <span className="text-orange-400">{currentItem.conceptualGauge}%</span>
+                    </div>
+                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${currentItem.conceptualGauge}%` }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                        className="h-full bg-gradient-to-r from-orange-500 to-orange-400 rounded-full"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bouton vers la source */}
+              {currentItem.sourceUrl && (
+                <motion.a
+                  href={currentItem.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-red-600 hover:bg-red-500 rounded-xl text-white font-semibold transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <ExternalLink size={20} />
+                  Voir sur YouTube
+                </motion.a>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

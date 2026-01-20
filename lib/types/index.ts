@@ -6,6 +6,7 @@ export interface ContentItem {
   source: string;
   category: string;
   imageUrl: string;
+  sourceUrl?: string; // URL vers la vidéo YouTube ou source externe
   description?: string;
   realGauge: number; // 0-100
   conceptualGauge: number; // 0-100

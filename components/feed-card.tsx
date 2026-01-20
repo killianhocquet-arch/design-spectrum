@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Share2, MoreVertical } from 'lucide-react';
+import { Heart, Share2, MoreVertical, ExternalLink, ChevronUp } from 'lucide-react';
 import { ContentItem } from '@/lib/types';
 import { GaugeBar } from './gauge-bar';
 
@@ -11,15 +11,22 @@ interface FeedCardProps {
   onFavorite: (id: string) => void;
   onNext: () => void;
   hasNext: boolean;
+  onShowDetails?: () => void;
 }
 
-export function FeedCard({ content, onFavorite, onNext, hasNext }: FeedCardProps) {
+export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails }: FeedCardProps) {
   const [isDoubleTap, setIsDoubleTap] = useState(false);
 
   const handleDoubleTap = () => {
     onFavorite(content.id);
     setIsDoubleTap(true);
     setTimeout(() => setIsDoubleTap(false), 600);
+  };
+
+  const handleOpenSource = () => {
+    if (content.sourceUrl) {
+      window.open(content.sourceUrl, '_blank', 'noopener,noreferrer');
+    }
   };
 
   return (
@@ -57,6 +64,26 @@ export function FeedCard({ content, onFavorite, onNext, hasNext }: FeedCardProps
         <button className="absolute top-4 right-4 p-2 bg-black/40 hover:bg-black/60 rounded-full backdrop-blur-sm transition-colors">
           <MoreVertical size={20} className="text-white" />
         </button>
+
+        {/* Indicateur Scroll/Détails - en haut au centre */}
+        {onShowDetails && (
+          <motion.button
+            onClick={onShowDetails}
+            className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/70 hover:text-white transition-colors"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <motion.div
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <ChevronUp size={24} />
+            </motion.div>
+            <span className="text-xs font-medium bg-black/40 px-2 py-1 rounded-full backdrop-blur-sm">
+              Détails
+            </span>
+          </motion.button>
+        )}
       </div>
 
       {/* Info Zone - 20% */}
@@ -110,6 +137,19 @@ export function FeedCard({ content, onFavorite, onNext, hasNext }: FeedCardProps
           >
             <Share2 size={20} className="text-white/60" />
           </motion.button>
+
+          {/* Bouton lien source (YouTube) */}
+          {content.sourceUrl && (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleOpenSource}
+              className="p-2 rounded-full hover:bg-white/10 transition-colors flex items-center gap-1"
+              title="Voir sur YouTube"
+            >
+              <ExternalLink size={20} className="text-white/60" />
+            </motion.button>
+          )}
 
           {/* Indicateur de swipe */}
           {hasNext && (
