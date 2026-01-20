@@ -1,0 +1,112 @@
+[
+  {
+    "id": "content-1",
+    "title": "Brutalism in Modern Web Design",
+    "source": "Designer Weekly",
+    "category": "Inspiration",
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=600&fit=crop",
+    "description": "Exploring bold, raw designs that challenge conventions and push minimalism to its limits",
+    "realGauge": 75,
+    "conceptualGauge": 85,
+    "createdAt": "2026-01-15T10:30:00Z"
+  },
+  {
+    "id": "content-2",
+    "title": "Color Psychology Guide 2026",
+    "source": "Design Academy",
+    "category": "Learning",
+    "imageUrl": "https://images.unsplash.com/photo-1565043666747-69f6646db940?w=500&h=600&fit=crop",
+    "description": "Deep dive into color theory, emotional impact, and accessibility in modern design",
+    "realGauge": 60,
+    "conceptualGauge": 90,
+    "createdAt": "2026-01-14T14:20:00Z"
+  },
+  {
+    "id": "content-3",
+    "title": "Typography Trends 2026",
+    "source": "Font Foundry",
+    "category": "Trends",
+    "imageUrl": "https://images.unsplash.com/photo-1573789178249-9a55a87e4113?w=500&h=600&fit=crop",
+    "description": "Modern typefaces, variable fonts, and their impact on digital experiences",
+    "realGauge": 80,
+    "conceptualGauge": 88,
+    "createdAt": "2026-01-13T09:15:00Z"
+  },
+  {
+    "id": "content-4",
+    "title": "UX Design Principles",
+    "source": "UX Magazine",
+    "category": "Learning",
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=600&fit=crop",
+    "description": "Essential principles for creating user-centric designs that convert",
+    "realGauge": 70,
+    "conceptualGauge": 95,
+    "createdAt": "2026-01-12T11:45:00Z"
+  },
+  {
+    "id": "content-5",
+    "title": "Glassmorphism Design System",
+    "source": "Design Systems Weekly",
+    "category": "Inspiration",
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=600&fit=crop",
+    "description": "Building modern design systems with glassmorphic components and tokens",
+    "realGauge": 85,
+    "conceptualGauge": 82,
+    "createdAt": "2026-01-11T16:30:00Z"
+  },
+  {
+    "id": "content-6",
+    "title": "Micro-interactions That Matter",
+    "source": "Interaction Design Foundation",
+    "category": "Learning",
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=600&fit=crop",
+    "description": "Creating delightful micro-interactions that improve user engagement",
+    "realGauge": 72,
+    "conceptualGauge": 78,
+    "createdAt": "2026-01-10T13:20:00Z"
+  },
+  {
+    "id": "content-7",
+    "title": "Accessibility in Modern Design",
+    "source": "Web Accessibility Institute",
+    "category": "Learning",
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=600&fit=crop",
+    "description": "WCAG 2.1 standards and practical tips for accessible design",
+    "realGauge": 65,
+    "conceptualGauge": 92,
+    "createdAt": "2026-01-09T10:00:00Z"
+  },
+  {
+    "id": "content-8",
+    "title": "Dark Mode Design Best Practices",
+    "source": "Designer Weekly",
+    "category": "Trends",
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=600&fit=crop",
+    "description": "Creating comfortable and beautiful dark mode experiences",
+    "realGauge": 78,
+    "conceptualGauge": 81,
+    "createdAt": "2026-01-08T15:45:00Z"
+  },
+  {
+    "id": "content-9",
+    "title": "Web Performance & Design",
+    "source": "Performance Academy",
+    "category": "Learning",
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=600&fit=crop",
+    "description": "How to balance beautiful design with optimal web performance",
+    "realGauge": 88,
+    "conceptualGauge": 75,
+    "createdAt": "2026-01-07T12:30:00Z"
+  },
+  {
+    "id": "content-10",
+    "title": "Animation in UI/UX",
+    "source": "Motion Design Institute",
+    "category": "Inspiration",
+    "imageUrl": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=600&fit=crop",
+    "description": "Purposeful animations that enhance user experience without distraction",
+    "realGauge": 76,
+    "conceptualGauge": 84,
+    "createdAt": "2026-01-06T14:15:00Z"
+  }
+]
