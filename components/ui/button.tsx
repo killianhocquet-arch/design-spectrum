@@ -2,6 +2,7 @@
 
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
@@ -10,8 +11,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        default: 'bg-gradient-to-r from-orange-500 to-orange-600 hover:to-orange-700 text-white',
         primary: 'bg-gradient-to-r from-orange-500 to-orange-600 hover:to-orange-700 text-white',
         secondary: 'border border-orange-500 text-orange-500 hover:bg-orange-500/10',
+        outline: 'border border-orange-500 text-orange-500 hover:bg-orange-500/10',
         glass: 'bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/20',
         destructive: 'bg-red-500 hover:bg-red-600 text-white',
         ghost: 'hover:bg-white/10 text-white',
@@ -35,6 +38,7 @@ interface ButtonProps
     VariantProps<typeof buttonVariants> {
   isLoading?: boolean;
   children: ReactNode;
+  asChild?: boolean;
 }
 
 export function Button({
@@ -44,15 +48,25 @@ export function Button({
   isLoading,
   children,
   disabled,
+  asChild = false,
   ...props
 }: ButtonProps) {
+  if (asChild) {
+    return (
+      <Slot className={cn(buttonVariants({ variant, size }), className)}>
+        {children}
+      </Slot>
+    );
+  }
+
   return (
     <motion.button
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={cn(buttonVariants({ variant, size }), className)}
       disabled={disabled || isLoading}
-      {...props}
+      type={props.type}
+      onClick={props.onClick}
     >
       {isLoading ? (
         <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />

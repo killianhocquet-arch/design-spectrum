@@ -22,15 +22,9 @@ export function FeedCard({ content, onFavorite, onNext, hasNext }: FeedCardProps
     setTimeout(() => setIsDoubleTap(false), 600);
   };
 
-  const handleSwipeRight = () => {
-    if (hasNext) {
-      onNext();
-    }
-  };
-
   return (
     <div
-      className="relative w-full h-full flex flex-col bg-black cursor-grab active:cursor-grabbing"
+      className="relative w-full h-full flex flex-col bg-black select-none"
       onDoubleClick={handleDoubleTap}
     >
       {/* Image - 80% */}
@@ -117,15 +111,17 @@ export function FeedCard({ content, onFavorite, onNext, hasNext }: FeedCardProps
             <Share2 size={20} className="text-white/60" />
           </motion.button>
 
+          {/* Indicateur de swipe */}
           {hasNext && (
-            <motion.button
-              onClick={handleSwipeRight}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="ml-auto px-4 py-1.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:to-orange-700 text-white rounded-full text-sm font-semibold transition-all"
-            >
-              Suivant →
-            </motion.button>
+            <div className="ml-auto flex items-center gap-2 text-white/40 text-xs">
+              <span>Swipe pour continuer</span>
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                →
+              </motion.span>
+            </div>
           )}
         </div>
       </div>

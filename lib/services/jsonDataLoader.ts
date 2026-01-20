@@ -69,7 +69,7 @@ function convertYouTubeToContentItem(video: YouTubeVideo, index: number): Conten
     realGauge: Math.min(100, Math.max(20, Math.floor(Math.log(viewCount) * 15))),
     conceptualGauge: Math.min(100, Math.max(50, Math.floor((likeCount / viewCount) * 100 * 5))),
     isFavorite: false,
-    createdAt: video.date_posted || new Date().toISOString()
+    createdAt: video.date_posted ? new Date(video.date_posted) : new Date()
   };
 }
 
