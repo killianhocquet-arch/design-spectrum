@@ -29,6 +29,17 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /* Custom app colors for light mode */
+    --app-orange: 24 100% 50%;
+    --app-orange-muted: 24 100% 95%;
+    --app-blue: 217 91% 60%;
+    --app-blue-muted: 217 91% 95%;
+    --app-red: 0 84% 60%;
+    --app-gradient-start: 215 28% 97%;
+    --app-gradient-end: 0 0% 100%;
+    --app-overlay: 0 0% 98%;
+    --app-overlay-border: 0 0% 85%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -55,6 +66,17 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* Custom app colors for dark mode */
+    --app-orange: 24 100% 50%;
+    --app-orange-muted: 24 100% 10%;
+    --app-blue: 217 91% 60%;
+    --app-blue-muted: 217 91% 10%;
+    --app-red: 0 84% 60%;
+    --app-gradient-start: 222 47% 11%;
+    --app-gradient-end: 0 0% 0%;
+    --app-overlay: 0 0% 10%;
+    --app-overlay-border: 0 0% 20%;
   }
 }
 

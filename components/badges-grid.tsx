@@ -17,11 +17,11 @@ export function BadgesGrid({ badges, maxDisplay = 12 }: BadgesGridProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
-      className="rounded-2xl border border-white/10 backdrop-blur-md bg-white/5 p-6 space-y-4"
+      className="rounded-2xl border border-border backdrop-blur-md bg-card p-6 space-y-4"
     >
       <div className="flex items-center justify-between">
-        <h3 className="text-white font-semibold">Badges</h3>
-        <span className="text-xs text-white/60">
+        <h3 className="text-foreground font-semibold">Badges</h3>
+        <span className="text-xs text-muted-foreground">
           {unlockedCount}/{badges.length}
         </span>
       </div>
@@ -38,17 +38,17 @@ export function BadgesGrid({ badges, maxDisplay = 12 }: BadgesGridProps) {
             <div
               className={`w-16 h-16 rounded-lg flex items-center justify-center text-2xl transition-all ${
                 badge.unlocked
-                  ? 'bg-orange-500/20 border border-orange-500/30'
-                  : 'bg-white/5 border border-white/10 opacity-50'
+                  ? 'bg-app-orange-muted border border-app-orange/30'
+                  : 'bg-muted border border-border opacity-50'
               }`}
             >
               {badge.icon}
             </div>
 
             {!badge.unlocked && badge.progress !== undefined && (
-              <div className="absolute inset-0 rounded-lg flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute inset-0 rounded-lg flex items-center justify-center bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="text-center">
-                  <p className="text-xs text-white font-semibold">
+                  <p className="text-xs text-foreground font-semibold">
                     {badge.progress}%
                   </p>
                 </div>
@@ -56,7 +56,7 @@ export function BadgesGrid({ badges, maxDisplay = 12 }: BadgesGridProps) {
             )}
 
             {/* Tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black/80 rounded text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover/80 rounded text-xs text-popover-foreground whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
               {badge.name}
             </div>
           </motion.div>
@@ -64,7 +64,7 @@ export function BadgesGrid({ badges, maxDisplay = 12 }: BadgesGridProps) {
       </div>
 
       {badges.length > maxDisplay && (
-        <p className="text-xs text-white/40 text-center">
+        <p className="text-xs text-muted-foreground text-center">
           +{badges.length - maxDisplay} badges à découvrir
         </p>
       )}

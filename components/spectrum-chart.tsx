@@ -36,9 +36,9 @@ export function SpectrumChart({ data }: SpectrumChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1 }}
-      className="rounded-2xl border border-white/10 backdrop-blur-md bg-white/5 p-6 space-y-4"
+      className="rounded-2xl border border-border backdrop-blur-md bg-card p-6 space-y-4"
     >
-      <h3 className="text-white font-semibold">Ton Spectre Créatif</h3>
+      <h3 className="text-foreground font-semibold">Ton Spectre Créatif</h3>
 
       {/* SVG Chart */}
       <svg viewBox="0 0 200 200" className="w-full max-w-xs mx-auto">
@@ -111,7 +111,7 @@ export function SpectrumChart({ data }: SpectrumChartProps) {
               y={labelY + 100}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="text-xs fill-white/60 font-medium"
+              className="text-xs fill-muted-foreground font-medium"
             >
               {point.label}
             </text>
@@ -122,9 +122,9 @@ export function SpectrumChart({ data }: SpectrumChartProps) {
       {/* Stats grid */}
       <div className="grid grid-cols-2 gap-2 text-xs">
         {points.map((point) => (
-          <div key={point.label} className="flex items-center justify-between p-2 bg-white/5 rounded">
-            <span className="text-white/60">{point.label}</span>
-            <span className="text-orange-400 font-semibold">{point.value}%</span>
+          <div key={point.label} className="flex items-center justify-between p-2 bg-muted rounded">
+            <span className="text-muted-foreground">{point.label}</span>
+            <span className="text-app-orange font-semibold">{point.value}%</span>
           </div>
         ))}
       </div>
