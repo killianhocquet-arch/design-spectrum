@@ -252,8 +252,20 @@ export default function FeedPage() {
       {/* Carte principale avec drag */}
       <AnimatePresence initial={false} custom={exitDirection} mode="popLayout">
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent to-app-orange/20 pointer-events-none flex items-center justify-end pr-8"
-          style={{ opacity: leftOverlayOpacity }}
+          key={currentIndex}
+          custom={exitDirection}
+          variants={cardVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          style={{ x, rotate, opacity: cardOpacity }}
+          drag
+          dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+          dragElastic={0.7}
+          onDragEnd={handleDragEnd}
+          onWheel={handleWheel}
+          className="absolute inset-0 flex items-center justify-center"
         >
           <FeedCard
             content={currentItem}
@@ -262,41 +274,49 @@ export default function FeedPage() {
             hasNext={currentIndex < items.length - 1}
             onShowDetails={handleShowDetails}
             onShare={handleShare}
-            // onOpenSource={handleOpenSource}
           />
-
-          {/* Overlay indicateur swipe gauche (suivant) */}
-          <motion.div
-            className="text-app-orange font-bold text-xl"
-            style={{ opacity: leftTextOpacity }}
-          >
-            <motion.div
-              className="text-orange-500 font-bold text-xl"
-              style={{ opacity: leftTextOpacity }}
-            >
-              SUIVANT →
-            </motion.div>
-          </motion.div>
-
-        {/* Overlay indicateur swipe droite (précédent) */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-l from-transparent to-app-blue/20 pointer-events-none flex items-center justify-start pl-8"
-          style={{ opacity: rightOverlayOpacity }}
-        >
-          <motion.div
-            className="text-app-blue font-bold text-xl"
-            style={{ opacity: rightTextOpacity }}
-          >
-            <motion.div
-              className="text-purple-400 font-bold text-xl flex flex-col items-center gap-1"
-              style={{ opacity: topTextOpacity }}
-            >
-              <span>↑</span>
-              <span>DÉTAILS</span>
-            </motion.div>
-          </motion.div>
         </motion.div>
       </AnimatePresence>
+
+      {/* Overlay indicateur swipe gauche (suivant) */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-transparent to-app-orange/20 pointer-events-none flex items-center justify-end pr-8"
+        style={{ opacity: leftOverlayOpacity }}
+      >
+        <motion.div
+          className="text-app-orange font-bold text-xl"
+          style={{ opacity: leftTextOpacity }}
+        >
+          SUIVANT →
+        </motion.div>
+      </motion.div>
+
+      {/* Overlay indicateur swipe droite (précédent) */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-l from-transparent to-app-blue/20 pointer-events-none flex items-center justify-start pl-8"
+        style={{ opacity: rightOverlayOpacity }}
+      >
+        <motion.div
+          className="text-app-blue font-bold text-xl"
+          style={{ opacity: rightTextOpacity }}
+        >
+          ← PRÉCÉDENT
+        </motion.div>
+      </motion.div>
+
+      {/* Overlay indicateur swipe haut (détails) */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-b from-purple-500/20 to-transparent pointer-events-none flex items-start justify-center pt-8"
+        style={{ opacity: topOverlayOpacity }}
+      >
+        <motion.div
+          className="text-purple-400 font-bold text-xl flex flex-col items-center gap-1"
+          style={{ opacity: topTextOpacity }}
+        >
+          <span>↑</span>
+          <span>DÉTAILS</span>
+        </motion.div>
+      </motion.div>
 
       {/* Indicateur de navigation */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-muted-foreground pointer-events-none">
