@@ -51,6 +51,19 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        "app-orange": {
+          DEFAULT: "hsl(var(--app-orange))",
+          muted: "hsl(var(--app-orange-muted))",
+        },
+        "app-blue": {
+          DEFAULT: "hsl(var(--app-blue))",
+          muted: "hsl(var(--app-blue-muted))",
+        },
+        "app-red": "hsl(var(--app-red))",
+        "app-gradient-start": "hsl(var(--app-gradient-start))",
+        "app-gradient-end": "hsl(var(--app-gradient-end))",
+        "app-overlay": "hsl(var(--app-overlay))",
+        "app-overlay-border": "hsl(var(--app-overlay-border))",
       },
       borderRadius: {
         lg: "var(--radius)",

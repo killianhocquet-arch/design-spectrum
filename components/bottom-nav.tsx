@@ -14,7 +14,7 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="h-16 border-t border-white/10 backdrop-blur-md bg-black/50 flex items-center justify-around px-4">
+    <nav className="h-16 border-t border-border backdrop-blur-md bg-app-overlay/50 flex items-center justify-around px-4">
       {navItems.map(({ href, icon: Icon, label }) => {
         const isActive = pathname.startsWith(href);
         return (
@@ -22,7 +22,7 @@ export function BottomNav() {
             key={href}
             href={href}
             className={`flex flex-col items-center gap-1 transition-colors ${
-              isActive ? 'text-orange-500' : 'text-white/50 hover:text-white/80'
+              isActive ? 'text-app-orange' : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             <Icon size={24} />
