@@ -249,7 +249,7 @@ export default function FeedPage() {
         })}
       </div>
 
-      {/* Carte principale avec drag */}
+      {/* Carte principale avec animations de swipe */}
       <AnimatePresence initial={false} custom={exitDirection} mode="popLayout">
         <motion.div
           key={currentIndex}
