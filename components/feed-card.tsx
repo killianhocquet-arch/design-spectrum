@@ -12,9 +12,10 @@ interface FeedCardProps {
   onNext: () => void;
   hasNext: boolean;
   onShowDetails?: () => void;
+  onShare?: () => void;
 }
 
-export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails }: FeedCardProps) {
+export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, onShare }: FeedCardProps) {
   const [isDoubleTap, setIsDoubleTap] = useState(false);
 
   const handleDoubleTap = () => {
@@ -26,6 +27,23 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails }
   const handleOpenSource = () => {
     if (content.sourceUrl) {
       window.open(content.sourceUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleShare = async () => {
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: content.title,
+          text: `Découvre ce design : ${content.title}`,
+          url: content.sourceUrl || window.location.href,
+        });
+        onShare?.();
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      onShare?.();
     }
   };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, WheelEvent, useRef } from 'react';
 import { motion, useMotionValue, useTransform, PanInfo, AnimatePresence } from 'framer-motion';
 import { ContentItem } from '@/lib/types';
 import { FeedCard } from '@/components/feed-card';
@@ -13,7 +13,7 @@ const SWIPE_THRESHOLD = 100;
 const SWIPE_VELOCITY = 500;
 
 export default function FeedPage() {
-  const { appData, isLoaded, toggleFavorite, addXP } = useAppData();
+  const { appData, isLoaded, toggleFavorite, addXP, incrementStreak } = useAppData();
   const { items: fetchedItems, isLoading, error, refetch } = useFetchContent({
     category: 'all',
     limit: 20,
@@ -22,17 +22,25 @@ export default function FeedPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [showStreakNotification, setShowStreakNotification] = useState(false);
+  const [showBigStreak, setShowBigStreak] = useState(false);
+  const streakActivated = useRef(false);
 
   // Motion values pour le drag
   const x = useMotionValue(0);
+  const y = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-15, 15]);
   const cardOpacity = useTransform(x, [-200, -100, 0, 100, 200], [0.5, 1, 1, 1, 0.5]);
 
-  // Overlays indicateurs de swipe
+  // Overlays indicateurs de swipe horizontal
   const leftOverlayOpacity = useTransform(x, [-150, -50, 0], [1, 0.5, 0]);
   const leftTextOpacity = useTransform(x, [-150, -80, 0], [1, 0, 0]);
   const rightOverlayOpacity = useTransform(x, [0, 50, 150], [0, 0.5, 1]);
   const rightTextOpacity = useTransform(x, [0, 80, 150], [0, 0, 1]);
+
+  // Overlay indicateur swipe vers le haut (détails)
+  const topOverlayOpacity = useTransform(y, [-150, -50, 0], [1, 0.5, 0]);
+  const topTextOpacity = useTransform(y, [-150, -80, 0], [1, 0, 0]);
 
   // Initialiser les items avec les données Brightdata + favoris
   useEffect(() => {
@@ -45,22 +53,41 @@ export default function FeedPage() {
     }
   }, [fetchedItems, appData.favorites, isLoaded]);
 
+  // Gérer l'activation du streak au 5ème post (index 4)
+  useEffect(() => {
+    if (currentIndex === 4 && !streakActivated.current) {
+      incrementStreak();
+      addXP(30); // Bonus pour avoir complété l'objectif quotidien
+      setShowStreakNotification(true);
+      setShowBigStreak(true);
+      streakActivated.current = true;
+    }
+  }, [currentIndex, incrementStreak, addXP]);
+
+  // Cacher la notification de streak après 5 secondes
+  useEffect(() => {
+    if (showStreakNotification) {
+      const timer = setTimeout(() => setShowStreakNotification(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showStreakNotification]);
+
   const handleFavorite = (id: string) => {
     toggleFavorite(id);
-    setItems(items.map((item) =>
-      item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-    ));
-    addXP(10);
+    setItems(items.map((item) => {
+      if (item.id === id) {
+        if (!item.isFavorite) addXP(10); // XP seulement si on ajoute aux favoris
+        return { ...item, isFavorite: !item.isFavorite };
+      }
+      return item;
+    }));
   };
 
   const handleNext = () => {
     if (currentIndex < items.length - 1) {
       setExitDirection('left');
-      setTimeout(() => {
-        setCurrentIndex(currentIndex + 1);
-        setExitDirection(null);
-        x.set(0);
-      }, 200);
+      setCurrentIndex(currentIndex + 1);
+      x.set(0);
       addXP(5);
     }
   };
@@ -68,16 +95,29 @@ export default function FeedPage() {
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setExitDirection('right');
-      setTimeout(() => {
-        setCurrentIndex(currentIndex - 1);
-        setExitDirection(null);
-        x.set(0);
-      }, 200);
+      setCurrentIndex(currentIndex - 1);
+      x.set(0);
     }
+  };
+
+  const handleShare = () => {
+    addXP(10);
+  };
+
+  const handleOpenSource = () => {
+    addXP(15);
   };
 
   const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const { offset, velocity } = info;
+
+    // Swipe vers le haut = afficher détails
+    if (offset.y < -SWIPE_THRESHOLD || velocity.y < -SWIPE_VELOCITY) {
+      setShowDetails(true);
+      x.set(0);
+      y.set(0);
+      return;
+    }
 
     // Swipe vers la gauche = carte suivante
     if (offset.x < -SWIPE_THRESHOLD || velocity.x < -SWIPE_VELOCITY) {
@@ -101,6 +141,7 @@ export default function FeedPage() {
     else {
       x.set(0);
     }
+    y.set(0);
   };
 
   const handleShowDetails = useCallback(() => {
@@ -110,6 +151,13 @@ export default function FeedPage() {
   const handleCloseDetails = useCallback(() => {
     setShowDetails(false);
   }, []);
+
+  // Permettre le scroll souris/trackpad pour ouvrir les détails
+  const handleWheel = useCallback((event: WheelEvent) => {
+    if (event.deltaY > 30 && !showDetails) {
+      setShowDetails(true);
+    }
+  }, [showDetails]);
 
   if (!isLoaded || (isLoading && items.length === 0)) {
     return (
@@ -158,8 +206,12 @@ export default function FeedPage() {
   const currentItem = items[currentIndex];
 
   // Variants pour l'animation d'entrée/sortie
+  // Quand on swipe vers la gauche (next): la carte sort à gauche, la nouvelle entre par la droite
+  // Quand on swipe vers la droite (previous): la carte sort à droite, la nouvelle entre par la gauche
   const cardVariants = {
     enter: (direction: 'left' | 'right' | null) => ({
+      // Si direction 'left' (next), nouvelle carte entre par la droite (+300)
+      // Si direction 'right' (previous), nouvelle carte entre par la gauche (-300)
       x: direction === 'left' ? 300 : direction === 'right' ? -300 : 0,
       opacity: 0,
       scale: 0.95,
@@ -170,6 +222,8 @@ export default function FeedPage() {
       scale: 1,
     },
     exit: (direction: 'left' | 'right' | null) => ({
+      // Si direction 'left' (next), carte actuelle sort vers la gauche (-300)
+      // Si direction 'right' (previous), carte actuelle sort vers la droite (+300)
       x: direction === 'left' ? -300 : direction === 'right' ? 300 : 0,
       opacity: 0,
       scale: 0.95,
@@ -196,44 +250,33 @@ export default function FeedPage() {
       </div>
 
       {/* Carte principale avec drag */}
-      <motion.div
-        key={currentItem.id}
-        custom={exitDirection}
-        variants={cardVariants}
-        initial="enter"
-        animate={exitDirection ? 'exit' : 'center'}
-        transition={{
-          type: 'spring',
-          stiffness: 300,
-          damping: 30,
-        }}
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.7}
-        onDragEnd={handleDragEnd}
-        style={{ x, rotate, opacity: cardOpacity }}
-        className="w-full h-full cursor-grab active:cursor-grabbing touch-pan-y"
-      >
-        <FeedCard
-          content={currentItem}
-          onFavorite={handleFavorite}
-          onNext={handleNext}
-          hasNext={currentIndex < items.length - 1}
-          onShowDetails={handleShowDetails}
-        />
-
-        {/* Overlay indicateur swipe gauche (suivant) */}
+      <AnimatePresence initial={false} custom={exitDirection} mode="popLayout">
         <motion.div
           className="absolute inset-0 bg-gradient-to-r from-transparent to-app-orange/20 pointer-events-none flex items-center justify-end pr-8"
           style={{ opacity: leftOverlayOpacity }}
         >
+          <FeedCard
+            content={currentItem}
+            onFavorite={handleFavorite}
+            onNext={handleNext}
+            hasNext={currentIndex < items.length - 1}
+            onShowDetails={handleShowDetails}
+            onShare={handleShare}
+            // onOpenSource={handleOpenSource}
+          />
+
+          {/* Overlay indicateur swipe gauche (suivant) */}
           <motion.div
             className="text-app-orange font-bold text-xl"
             style={{ opacity: leftTextOpacity }}
           >
-            SUIVANT →
+            <motion.div
+              className="text-orange-500 font-bold text-xl"
+              style={{ opacity: leftTextOpacity }}
+            >
+              SUIVANT →
+            </motion.div>
           </motion.div>
-        </motion.div>
 
         {/* Overlay indicateur swipe droite (précédent) */}
         <motion.div
@@ -244,10 +287,16 @@ export default function FeedPage() {
             className="text-app-blue font-bold text-xl"
             style={{ opacity: rightTextOpacity }}
           >
-            ← RETOUR
+            <motion.div
+              className="text-purple-400 font-bold text-xl flex flex-col items-center gap-1"
+              style={{ opacity: topTextOpacity }}
+            >
+              <span>↑</span>
+              <span>DÉTAILS</span>
+            </motion.div>
           </motion.div>
         </motion.div>
-      </motion.div>
+      </AnimatePresence>
 
       {/* Indicateur de navigation */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-muted-foreground pointer-events-none">
@@ -369,6 +418,42 @@ export default function FeedPage() {
                   Voir sur YouTube
                 </motion.a>
               )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Big Streak Overlay */}
+      <AnimatePresence>
+        {showBigStreak && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer"
+            onClick={() => {
+              setShowBigStreak(false);
+              setShowStreakNotification(false);
+            }}
+          >
+            <div className="flex flex-col items-center gap-4 p-8 text-center">
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.2, 1], 
+                  rotate: [0, 10, -10, 0] 
+                }}
+                transition={{ 
+                  duration: 0.5, 
+                  repeat: Infinity, 
+                  repeatDelay: 1 
+                }}
+                className="text-8xl"
+              >
+                🔥
+              </motion.div>
+              <h2 className="text-4xl font-bold text-white">Streak Active!</h2>
+              <p className="text-white/80 text-lg">Objectif quotidien atteint</p>
+              <p className="text-orange-500 font-bold text-2xl mt-2">{appData.streak} jours</p>
             </div>
           </motion.div>
         )}
