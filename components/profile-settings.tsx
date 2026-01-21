@@ -18,7 +18,7 @@ export function ProfileSettings() {
       transition={{ duration: 0.4, delay: 0.3 }}
       className="px-4 py-4 space-y-2"
     >
-      <h3 className="text-white font-semibold mb-3">Paramètres</h3>
+      <h3 className="text-foreground font-semibold mb-3">Paramètres</h3>
 
       {settings.map((setting, index) => {
         const Icon = setting.icon;
@@ -31,21 +31,21 @@ export function ProfileSettings() {
             whileHover={{ x: 4 }}
             className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors ${
               setting.danger
-                ? 'border-red-500/20 hover:bg-red-500/10'
-                : 'border-white/10 hover:bg-white/5'
+                ? 'border-destructive/20 hover:bg-destructive/10'
+                : 'border-border hover:bg-muted'
             }`}
           >
             <div className="flex items-center gap-3">
               <Icon
                 size={20}
-                className={setting.danger ? 'text-red-400' : 'text-white/60'}
+                className={setting.danger ? 'text-destructive' : 'text-muted-foreground'}
               />
-              <span className={setting.danger ? 'text-red-400' : 'text-white text-sm'}>
+              <span className={setting.danger ? 'text-destructive' : 'text-foreground text-sm'}>
                 {setting.label}
               </span>
             </div>
             {setting.value && (
-              <span className="text-xs text-white/40">{setting.value}</span>
+              <span className="text-xs text-muted-foreground">{setting.value}</span>
             )}
           </motion.button>
         );
