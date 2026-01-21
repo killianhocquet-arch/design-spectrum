@@ -5,10 +5,10 @@ import { BottomNav } from '@/components/bottom-nav';
 
 export default function StatsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-slate-950 to-black">
+    <div className="flex flex-col h-screen bg-gradient-to-b from-app-gradient-start to-app-gradient-end">
       {/* Header */}
-      <header className="h-14 flex items-center justify-between px-4 border-b border-white/10 backdrop-blur-md bg-black/50">
-        <h1 className="text-white font-bold">Mes Stats</h1>
+      <header className="h-14 flex items-center justify-between px-4 border-b border-border backdrop-blur-md bg-app-overlay/50">
+        <h1 className="text-foreground font-bold">Mes Stats</h1>
       </header>
 
       {/* Main Content */}

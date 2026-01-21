@@ -49,7 +49,7 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, 
 
   return (
     <div
-      className="relative w-full h-full flex flex-col bg-black select-none"
+      className="relative w-full h-full flex flex-col bg-background select-none"
       onDoubleClick={handleDoubleTap}
     >
       {/* Image - 80% */}
@@ -64,7 +64,7 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, 
         />
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
 
         {/* Double-tap Heart Animation */}
         {isDoubleTap && (
@@ -74,14 +74,34 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, 
             transition={{ duration: 0.6 }}
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
           >
-            <Heart size={80} className="fill-red-500 text-red-500" />
+            <Heart size={80} className="fill-app-red text-app-red" />
           </motion.div>
         )}
 
         {/* Menu Top Right */}
-        <button className="absolute top-4 right-4 p-2 bg-black/40 hover:bg-black/60 rounded-full backdrop-blur-sm transition-colors">
-          <MoreVertical size={20} className="text-white" />
+        <button className="absolute top-4 right-4 p-2 bg-app-overlay/40 hover:bg-app-overlay/60 rounded-full backdrop-blur-sm transition-colors">
+          <MoreVertical size={20} className="text-foreground" />
         </button>
+
+        {/* Indicateur Scroll/Détails - en haut au centre */}
+        {onShowDetails && (
+          <motion.button
+            onClick={onShowDetails}
+            className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <motion.div
+              animate={{ y: [0, -4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <ChevronUp size={24} />
+            </motion.div>
+            <span className="text-xs font-medium bg-app-overlay/40 px-2 py-1 rounded-full backdrop-blur-sm">
+              Détails
+            </span>
+          </motion.button>
+        )}
       </div>
 
       {/* Info Zone - 20% */}
@@ -89,13 +109,13 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, 
         {/* Title & Category */}
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase font-semibold text-orange-500">
+            <span className="text-xs uppercase font-semibold text-app-orange">
               {content.category}
             </span>
-            <span className="text-xs text-white/50">•</span>
-            <span className="text-xs text-white/50">{content.source}</span>
+            <span className="text-xs text-muted-foreground">•</span>
+            <span className="text-xs text-muted-foreground">{content.source}</span>
           </div>
-          <h2 className="text-lg font-semibold text-white line-clamp-2">
+          <h2 className="text-lg font-semibold text-foreground line-clamp-2">
             {content.title}
           </h2>
         </div>
@@ -105,12 +125,12 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, 
           <GaugeBar
             label="Réel"
             value={content.realGauge}
-            color="from-blue-500"
+            color="from-app-blue"
           />
           <GaugeBar
             label="Conceptuel"
             value={content.conceptualGauge}
-            color="from-orange-500"
+            color="from-app-orange"
           />
         </div>
 
@@ -120,21 +140,20 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => onFavorite(content.id)}
-            className="p-2 rounded-full hover:bg-white/10 transition-colors"
+            className="p-2 rounded-full hover:bg-muted transition-colors"
           >
             <Heart
               size={20}
-              className={content.isFavorite ? 'fill-red-500 text-red-500' : 'text-white/60'}
+              className={content.isFavorite ? 'fill-app-red text-app-red' : 'text-muted-foreground'}
             />
           </motion.button>
 
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={handleShare}
-            className="p-2 rounded-full hover:bg-white/10 transition-colors"
+            className="p-2 rounded-full hover:bg-muted transition-colors"
           >
-            <Share2 size={20} className="text-white/60" />
+            <Share2 size={20} className="text-muted-foreground" />
           </motion.button>
 
           {/* Bouton lien source (YouTube) */}
@@ -143,16 +162,16 @@ export function FeedCard({ content, onFavorite, onNext, hasNext, onShowDetails, 
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={handleOpenSource}
-              className="p-2 rounded-full hover:bg-white/10 transition-colors flex items-center gap-1"
+              className="p-2 rounded-full hover:bg-muted transition-colors flex items-center gap-1"
               title="Voir sur YouTube"
             >
-              <ExternalLink size={20} className="text-white/60" />
+              <ExternalLink size={20} className="text-muted-foreground" />
             </motion.button>
           )}
 
           {/* Indicateur de swipe */}
           {hasNext && (
-            <div className="ml-auto flex items-center gap-2 text-white/40 text-xs">
+            <div className="ml-auto flex items-center gap-2 text-muted-foreground text-xs">
               <span>Swipe pour continuer</span>
               <motion.span
                 animate={{ x: [0, 5, 0] }}

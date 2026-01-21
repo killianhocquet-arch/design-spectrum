@@ -73,7 +73,7 @@ export default function ProfilPage() {
 
   if (!isLoaded) {
     return (
-      <div className="w-full h-full flex items-center justify-center text-white">
+      <div className="w-full h-full flex items-center justify-center text-foreground">
         <div className="animate-pulse">Chargement de ton profil...</div>
       </div>
     );
@@ -94,7 +94,7 @@ export default function ProfilPage() {
       />
 
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
       {/* Favoris */}
       <div className="py-6">
@@ -102,7 +102,7 @@ export default function ProfilPage() {
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
       {/* Categories */}
       <div className="py-6">
@@ -119,7 +119,7 @@ export default function ProfilPage() {
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
       {/* Settings */}
       <ProfileSettings />
@@ -131,19 +131,19 @@ export default function ProfilPage() {
         transition={{ duration: 0.4, delay: 0.4 }}
         className="px-4 py-6 space-y-3"
       >
-        <h3 className="text-white font-semibold">Résumé</h3>
+        <h3 className="text-foreground font-semibold">Résumé</h3>
         <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-lg bg-white/5 border border-white/10 p-3 text-center">
-            <p className="text-2xl font-bold text-orange-400">{appData.streak}</p>
-            <p className="text-xs text-white/60">Jours</p>
+          <div className="rounded-lg bg-muted border border-border p-3 text-center">
+            <p className="text-2xl font-bold text-app-orange">{appData.streak}</p>
+            <p className="text-xs text-muted-foreground">Jours</p>
           </div>
-          <div className="rounded-lg bg-white/5 border border-white/10 p-3 text-center">
-            <p className="text-2xl font-bold text-orange-400">{appData.totalXP}</p>
-            <p className="text-xs text-white/60">XP</p>
+          <div className="rounded-lg bg-muted border border-border p-3 text-center">
+            <p className="text-2xl font-bold text-app-orange">{appData.totalXP}</p>
+            <p className="text-xs text-muted-foreground">XP</p>
           </div>
-          <div className="rounded-lg bg-white/5 border border-white/10 p-3 text-center">
-            <p className="text-2xl font-bold text-orange-400">{favoriteItems.length}</p>
-            <p className="text-xs text-white/60">Favoris</p>
+          <div className="rounded-lg bg-muted border border-border p-3 text-center">
+            <p className="text-2xl font-bold text-app-orange">{favoriteItems.length}</p>
+            <p className="text-xs text-muted-foreground">Favoris</p>
           </div>
         </div>
       </motion.div>

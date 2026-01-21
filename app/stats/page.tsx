@@ -61,7 +61,7 @@ export default function StatsPage() {
 
   if (!isLoaded) {
     return (
-      <div className="w-full h-full flex items-center justify-center text-white">
+      <div className="w-full h-full flex items-center justify-center text-foreground">
         <div className="animate-pulse">Chargement de tes stats...</div>
       </div>
     );
@@ -76,8 +76,8 @@ export default function StatsPage() {
     >
       {/* Welcome */}
       <motion.div className="space-y-1">
-        <h1 className="text-2xl font-bold text-white">Tes Statistiques</h1>
-        <p className="text-white/60 text-sm">
+        <h1 className="text-2xl font-bold text-foreground">Tes Statistiques</h1>
+        <p className="text-muted-foreground text-sm">
           Level {appData.currentLevel} • {appData.totalXP} XP total
         </p>
       </motion.div>
